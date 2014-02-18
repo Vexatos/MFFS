@@ -1,6 +1,6 @@
 itemGroup.tabMFFS=Modular Forcefield System
 
-tooltips.forceEnergy=Force Energy
+tile.monazitOre.name=Monazit Ore
+tile.forciciumBlock.name=Forcicium Block
 
-tile.blockOreMonazit.name=Monazit Ore
-tile.blockForciciumBlock.name=Forcicium Block
+item.forcicium.name=Forcicium
