@@ -2,11 +2,12 @@ package com.minalien.mffs
 
 import cpw.mods.fml.common.Mod
 import cpw.mods.fml.common.Mod.EventHandler
-import cpw.mods.fml.common.event.FMLPreInitializationEvent
+import cpw.mods.fml.common.event.{FMLInitializationEvent, FMLPreInitializationEvent}
 import cpw.mods.fml.common.registry.GameRegistry
 import com.minalien.mffs.blocks.{BlockForciciumBlock, BlockMonazitOre}
 import com.minalien.mffs.items.ItemForcicium
 import net.minecraft.creativetab.CreativeTabs
+import com.minalien.mffs.world.MonazitOreWorldGenerator
 
 /**
  * Core mod object for the Modular Forcefield System mod.
@@ -43,6 +44,16 @@ object ModularForcefieldSystem {
 
 		// Register all mod items.
 		registerItems()
+	}
+
+	/**
+	 * Begins general mod initialization.
+	 *
+	 * @param eventArgs Event arguments passed by Forge Mod Loader.
+	 */
+	@EventHandler
+	def init(eventArgs: FMLInitializationEvent) {
+		GameRegistry.registerWorldGenerator(MonazitOreWorldGenerator, 0)
 	}
 
 	/**
