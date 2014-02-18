@@ -1,6 +1,6 @@
 package com.minalien.mffs
 
-import cpw.mods.fml.common.Mod
+import cpw.mods.fml.common.{SidedProxy, Mod}
 import cpw.mods.fml.common.Mod.EventHandler
 import cpw.mods.fml.common.event.{FMLInitializationEvent, FMLPreInitializationEvent}
 import cpw.mods.fml.common.registry.GameRegistry
@@ -8,6 +8,7 @@ import com.minalien.mffs.blocks._
 import com.minalien.mffs.items.ItemForcicium
 import net.minecraft.creativetab.CreativeTabs
 import com.minalien.mffs.world.MonazitOreWorldGenerator
+import com.minalien.mffs.proxy.CommonProxy
 
 /**
  * Core mod object for the Modular Forcefield System mod.
@@ -32,6 +33,9 @@ object ModularForcefieldSystem {
 		}
 	}
 
+	@SidedProxy(clientSide = "com.minalien.mffs.proxy.ClientProxy", serverSide = "com.minalien.mffs.proxy.CommonProxy")
+	var proxy: CommonProxy = null
+
 	/**
 	 * Loads mod configuration details and uses the data to register blocks, items and OreDictionary entries.
 	 *
@@ -53,6 +57,10 @@ object ModularForcefieldSystem {
 	 */
 	@EventHandler
 	def init(eventArgs: FMLInitializationEvent) {
+		// Initialize TESRs.
+		proxy.registerRenderers()
+
+		// Initialize World Generation.
 		GameRegistry.registerWorldGenerator(MonazitOreWorldGenerator, 0)
 	}
 
