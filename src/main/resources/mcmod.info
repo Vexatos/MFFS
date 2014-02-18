@@ -1,0 +1,27 @@
+[
+{
+        "modid": "ModularForcefieldSystem",
+        "name": "Modular Forcefield System",
+        "description": "Implement a powerful protective forcefield around your important technology or structures!",
+        "version": "${version}",
+        "mcversion": "${mcversion}",
+        "url": "http://www.curse.com/mc-mods/minecraft/modular-forcefield-system",
+        "updateUrl": "http://www.curse.com/mc-mods/minecraft/modular-forcefield-system",
+        "authors": [
+                "Minalien",
+                "Imalune",
+                "Thunderdark",
+                "Searge"
+        ],
+        "credits": "Minalien, Searge, Thunderdark, Imalune",
+        "logoFile": "",
+        "screenshots": [
+        ],
+        "parent": "",
+        "requiredMods": [
+        ],
+        "dependencies": [
+                "MinecraftForge"
+        ]
+}
+]
