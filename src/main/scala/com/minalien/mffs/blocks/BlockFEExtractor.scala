@@ -14,9 +14,4 @@ object BlockFEExtractor extends MFFSMachineBlock("feextractor") {
 	override def tileEntityClass = classOf[TileEntityFEExtractor]
 
 	override def createNewTileEntity(world: World, metadata: Int) = new TileEntityFEExtractor
-
-	override def onBlockActivated(world: World, x: Int, y: Int, z: Int, player: EntityPlayer, side: Int, nX: Float,
-	                              nY: Float, nZ: Float): Boolean = {
-		rotateBlock(world, x, y, z, ForgeDirection.getOrientation(side))
-	}
 }

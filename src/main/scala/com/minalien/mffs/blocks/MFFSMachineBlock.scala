@@ -89,7 +89,7 @@ abstract class MFFSMachineBlock(unlocalizedName: String) extends BlockContainer(
 	 * Rotates the block to face the specified ForgeDirection.
 	 */
 	override def rotateBlock(world: World, x: Int, y: Int, z: Int, newDirection: ForgeDirection): Boolean = {
-		if(!isRotationSensitive)
+		if(!isRotationSensitive || world.isRemote)
 			return false
 
 		var metadata = world.getBlockMetadata(x, y, z)

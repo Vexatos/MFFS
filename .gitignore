@@ -3,6 +3,9 @@ build
 .gradle
 eclipse
 
+# OS X Crap
+.DS_Store
+
 # eclipse stuff
 .classpath
 .project
