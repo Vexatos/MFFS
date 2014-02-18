@@ -2,5 +2,6 @@ itemGroup.tabMFFS=Modular Forcefield System
 
 tile.monazitOre.name=Monazit Ore
 tile.forciciumBlock.name=Forcicium Block
+tile.feextractor.name=Force Energy Extractor
 
 item.forcicium.name=Forcicium

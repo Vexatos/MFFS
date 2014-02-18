@@ -4,7 +4,7 @@ import cpw.mods.fml.common.Mod
 import cpw.mods.fml.common.Mod.EventHandler
 import cpw.mods.fml.common.event.{FMLInitializationEvent, FMLPreInitializationEvent}
 import cpw.mods.fml.common.registry.GameRegistry
-import com.minalien.mffs.blocks.{BlockForciciumBlock, BlockMonazitOre}
+import com.minalien.mffs.blocks._
 import com.minalien.mffs.items.ItemForcicium
 import net.minecraft.creativetab.CreativeTabs
 import com.minalien.mffs.world.MonazitOreWorldGenerator
@@ -60,9 +60,19 @@ object ModularForcefieldSystem {
 	 * Registers all blocks and their associated tile entities.
 	 */
 	def registerBlocks() {
+		def registerMachineBlock(block: MFFSMachineBlock) {
+			GameRegistry.registerBlock(block, block.getUnlocalizedName)
+
+			if(block.tileEntityClass != null)
+				GameRegistry.registerTileEntity(block.tileEntityClass, block.tileEntityClass.getCanonicalName)
+		}
+
 		// Register standard blocks.
 		GameRegistry.registerBlock(BlockMonazitOre, BlockMonazitOre.getUnlocalizedName)
 		GameRegistry.registerBlock(BlockForciciumBlock, BlockForciciumBlock.getUnlocalizedName)
+
+		// Register machine blocks.
+		registerMachineBlock(BlockFEExtractor)
 	}
 
 	/**
