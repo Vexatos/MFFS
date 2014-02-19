@@ -4,14 +4,36 @@ import net.minecraft.inventory.ISidedInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.entity.player.EntityPlayer
 import com.minalien.mffs.items.ItemForcicium
+import net.minecraft.nbt.{NBTTagList, NBTTagCompound}
 
 /**
  * Tile Entity responsible for the Force Energy Extractor.
  */
 class TileEntityFEExtractor extends MFFSMachineTileEntity with ISidedInventory {
+	val TAG_FORCICIUM_STACK = "FORCICIUM_STACK"
+
 	override def getForceEnergyCapacity: Float = 1800.0f
 
 	var forciciumStack: ItemStack = null
+
+	override def readFromNBT(tagCompound: NBTTagCompound) {
+		super.readFromNBT(tagCompound)
+
+		val forciciumStackTag = tagCompound.getCompoundTag(TAG_FORCICIUM_STACK)
+		if(forciciumStackTag != null)
+			forciciumStack = ItemStack.loadItemStackFromNBT(forciciumStackTag)
+	}
+
+	override def writeToNBT(tagCompound: NBTTagCompound) {
+		super.writeToNBT(tagCompound)
+
+		if(forciciumStack != null) {
+			val forciciumStackTag = new NBTTagCompound()
+			forciciumStack.writeToNBT(forciciumStackTag)
+
+			tagCompound.setTag(TAG_FORCICIUM_STACK, forciciumStackTag)
+		}
+	}
 
 	def getSizeInventory: Int = 1
 
@@ -38,9 +60,7 @@ class TileEntityFEExtractor extends MFFSMachineTileEntity with ISidedInventory {
 	def getStackInSlotOnClosing(slot: Int): ItemStack = forciciumStack
 
 	def setInventorySlotContents(slot: Int, itemStack: ItemStack) = {
-		if(isItemValidForSlot(slot, itemStack)) {
-			forciciumStack = itemStack
-		}
+		forciciumStack = itemStack
 	}
 
 	def getInventoryName: String = "MFFS_FE_EXTRACTOR"
@@ -76,7 +96,7 @@ class TileEntityFEExtractor extends MFFSMachineTileEntity with ISidedInventory {
 	}
 
 	def getAccessibleSlotsFromSide(side: Int): Array[Int] = {
-		new Array[Int](0)
+		Array.fill[Int](1)(0)
 	}
 
 	def canInsertItem(slot: Int, itemStack: ItemStack, side: Int): Boolean = isItemValidForSlot(slot, itemStack)
