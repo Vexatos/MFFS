@@ -18,10 +18,15 @@ object BlockFEExtractor extends MFFSMachineBlock("feextractor") {
 
 	override def onBlockActivated(world: World, x: Int, y: Int, z: Int, player: EntityPlayer, side: Int, nX: Float,
 	                              nY: Float, nZ: Float): Boolean = {
-		val tileEntity = world.getTileEntity(x, y, z)
+		val tileEntity = world.getTileEntity(x, y, z).asInstanceOf[TileEntityFEExtractor]
 
-		if(tileEntity == null || player.isSneaking)
+ 		if(tileEntity == null || world.isRemote/* || player.isSneaking*/)
 			return false
+
+		if(player.isSneaking) {
+			rotateBlock(world, x, y, z, ForgeDirection.getOrientation(side))
+			return true
+		}
 
 		player.openGui(ModularForcefieldSystem, 0, world, x, y, z)
 
