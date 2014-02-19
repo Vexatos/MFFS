@@ -64,6 +64,9 @@ class TileEntityFEExtractor extends MFFSMachineTileEntity with ISidedInventory {
 	def closeInventory(): Unit = {}
 
 	def isItemValidForSlot(slot: Int, itemStack: ItemStack): Boolean = {
+		if(itemStack == null)
+			return true
+
 		slot match {
 			case 0 =>
 				return itemStack.getItem == ItemForcicium

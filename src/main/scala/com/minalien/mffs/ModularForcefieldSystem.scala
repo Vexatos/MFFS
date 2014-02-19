@@ -1,7 +1,7 @@
 package com.minalien.mffs
 
 import cpw.mods.fml.common.{SidedProxy, Mod}
-import cpw.mods.fml.common.Mod.EventHandler
+import cpw.mods.fml.common.Mod.{Instance, EventHandler}
 import cpw.mods.fml.common.event.{FMLInitializationEvent, FMLPreInitializationEvent}
 import cpw.mods.fml.common.registry.GameRegistry
 import com.minalien.mffs.blocks._
@@ -9,6 +9,7 @@ import com.minalien.mffs.items.ItemForcicium
 import net.minecraft.creativetab.CreativeTabs
 import com.minalien.mffs.world.MonazitOreWorldGenerator
 import com.minalien.mffs.proxy.CommonProxy
+import cpw.mods.fml.common.network.NetworkRegistry
 
 /**
  * Core mod object for the Modular Forcefield System mod.
@@ -18,6 +19,7 @@ import com.minalien.mffs.proxy.CommonProxy
  * @version 3.0
  */
 @Mod(modid = "ModularForcefieldSystem", name = "Modular Forcefield System", version = "3.0", modLanguage = "scala")
+@Instance("ModularForcefieldSystem")
 object ModularForcefieldSystem {
 	/**
 	 * Directory within resources/ where mod resources are located.
@@ -62,6 +64,9 @@ object ModularForcefieldSystem {
 
 		// Initialize World Generation.
 		GameRegistry.registerWorldGenerator(MonazitOreWorldGenerator, 0)
+
+		// Register the GUI Handler.
+		NetworkRegistry.INSTANCE.registerGuiHandler(ModularForcefieldSystem, MFFSGUIHandler)
 	}
 
 	/**
