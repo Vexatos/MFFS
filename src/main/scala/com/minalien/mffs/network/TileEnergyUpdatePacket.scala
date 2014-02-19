@@ -1,7 +1,6 @@
 package com.minalien.mffs.network
 
 import io.netty.buffer.ByteBuf
-import com.minalien.mffs.api.HasForceEnergy
 import cpw.mods.fml.common.FMLLog
 import net.minecraftforge.common.DimensionManager
 
@@ -22,7 +21,7 @@ class TileEnergyUpdatePacket extends MFFSPacket {
 		z = data.readInt()
 		storedEnergy = data.readFloat()
 
-		val tileEntity = DimensionManager.getWorld(dimensionId).getTileEntity(x, y, z).asInstanceOf[HasForceEnergy]
+		val tileEntity = DimensionManager.getWorld(dimensionId).getTileEntity(x, y, z)
 		if(tileEntity == null) {
 			FMLLog.warning(s"Received MFFS:TileEnergyUpdatePacket for a TileEntity that does not exist!")
 			return

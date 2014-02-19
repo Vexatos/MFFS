@@ -3,7 +3,6 @@ package com.minalien.mffs.network
 import cpw.mods.fml.common.network.FMLIndexedMessageToMessageCodec
 import io.netty.channel.ChannelHandlerContext
 import io.netty.buffer.ByteBuf
-import com.minalien.mffs.ModularForcefieldSystem
 
 /**
  * Handles all packets on the MFFS Channel.
