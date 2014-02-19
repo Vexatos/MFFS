@@ -15,7 +15,15 @@ object ModConfig {
 		var monazitOreMaxHeight = 64
 	}
 
+	object ForceEnergy {
+		var forceEnergyPerForcicium = 100f
+		var forciciumConsumptionCycle = 200
+	}
+
 	def load(configFile: Configuration) {
+		//////////////////////////////////////////////////
+		// World Gen
+		//////////////////////////////////////////////////
 		WorldGen.enableMonazitOre = configFile.get("WorldGen", "Enable Monazit Ore", WorldGen.enableMonazitOre,
 			"If this is disabled, the Force Energy Extractor recipe will be disabled as well!").getBoolean(WorldGen
 			.enableMonazitOre)
@@ -35,6 +43,17 @@ object ModConfig {
 		WorldGen.monazitOreMaxHeight = configFile.get("WorldGen", "Monazit Ore Maximum Height",
 			WorldGen.monazitOreMaxHeight, "Maximum height in the world for Monazit Ore veins tos pawn.")
 			.getInt(WorldGen.monazitOreMaxHeight)
+
+		//////////////////////////////////////////////////
+		// Force Energy
+		//////////////////////////////////////////////////
+		ForceEnergy.forceEnergyPerForcicium = configFile.get("ForceEnergy", "Force Energy Per Forcicium",
+			ForceEnergy.forceEnergyPerForcicium, "Amount of Force Energy generated per Forcicium in the FE " +
+				"Extractor").getDouble(ForceEnergy.forceEnergyPerForcicium).asInstanceOf[Float]
+
+		ForceEnergy.forciciumConsumptionCycle = configFile.get("ForceEnergy", "Forcicium Consumption Cycle",
+			ForceEnergy.forciciumConsumptionCycle, "Number of ticks it takes to consume one Forcicium")
+			.getInt(ForceEnergy.forciciumConsumptionCycle)
 
 		if(configFile.hasChanged)
 			configFile.save()

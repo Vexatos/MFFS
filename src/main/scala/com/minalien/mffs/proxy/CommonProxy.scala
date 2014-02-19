@@ -6,4 +6,6 @@ package com.minalien.mffs.proxy
  */
 class CommonProxy {
 	def registerRenderers() {}
+
+	def isServer = true
 }

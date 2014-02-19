@@ -1,20 +1,67 @@
 package com.minalien.mffs.tiles
 
 import net.minecraft.inventory.ISidedInventory
-import net.minecraft.item.ItemStack
+import net.minecraft.item.{Item, ItemBlock, ItemStack}
 import net.minecraft.entity.player.EntityPlayer
 import com.minalien.mffs.items.ItemForcicium
 import net.minecraft.nbt.NBTTagCompound
+import com.minalien.mffs.blocks.BlockForciciumBlock
+import com.minalien.mffs.ModConfig
+import com.minalien.mffs.network.{NetworkUtil, PacketBuilder}
 
 /**
  * Tile Entity responsible for the Force Energy Extractor.
  */
 class TileEntityFEExtractor extends MFFSMachineTileEntity with ISidedInventory {
 	val TAG_FORCICIUM_STACK = "FORCICIUM_STACK"
+	val TAG_FORCICIUM_CONSUMED = "FORCICIUM_CONSUMED"
+	val TAG_CONSUMPTION_TICKS = "FORCICIUM_CONSUMPTION_TICKS"
 
 	override def getForceEnergyCapacity: Float = 1800.0f
 
 	var forciciumStack: ItemStack = null
+	var forciciumConsumed = 0
+	var consumptionTicks = 0
+
+	override def updateEntity() {
+		super.updateEntity()
+
+		if(worldObj.isRemote || !isActive)
+			return
+
+		if(forciciumConsumed == 0) {
+			if(forciciumStack != null && isItemValidForSlot(0, forciciumStack) && getCurrentForceEnergy < getForceEnergyCapacity) {
+				forciciumStack.getItem match {
+					case ib: ItemBlock =>
+						if(ib.field_150939_a == BlockForciciumBlock)
+							forciciumConsumed = 9
+
+					case i: Item =>
+						if(i == ItemForcicium)
+							forciciumConsumed = 1
+				}
+
+				forciciumStack.stackSize -= 1
+
+				if(forciciumStack.stackSize == 0)
+					setInventorySlotContents(0, null)
+			}
+		} else {
+			consumptionTicks += 1
+
+			if(consumptionTicks >= ModConfig.ForceEnergy.forciciumConsumptionCycle) {
+				forciciumConsumed -= 1
+
+				currentForceEnergy += ModConfig.ForceEnergy.forceEnergyPerForcicium
+
+				// Send an update packet.
+				val energyPacket = PacketBuilder.BuildTileEnergyUpdatePacket(this)
+				NetworkUtil.sendToAll(energyPacket)
+
+				consumptionTicks = 0
+			}
+		}
+	}
 
 	override def readFromNBT(tagCompound: NBTTagCompound) {
 		super.readFromNBT(tagCompound)
@@ -22,6 +69,9 @@ class TileEntityFEExtractor extends MFFSMachineTileEntity with ISidedInventory {
 		val forciciumStackTag = tagCompound.getCompoundTag(TAG_FORCICIUM_STACK)
 		if(forciciumStackTag != null)
 			forciciumStack = ItemStack.loadItemStackFromNBT(forciciumStackTag)
+
+		forciciumConsumed = tagCompound.getInteger(TAG_FORCICIUM_CONSUMED)
+		consumptionTicks = tagCompound.getInteger(TAG_CONSUMPTION_TICKS)
 	}
 
 	override def writeToNBT(tagCompound: NBTTagCompound) {
@@ -33,6 +83,9 @@ class TileEntityFEExtractor extends MFFSMachineTileEntity with ISidedInventory {
 
 			tagCompound.setTag(TAG_FORCICIUM_STACK, forciciumStackTag)
 		}
+
+		tagCompound.setInteger(TAG_FORCICIUM_CONSUMED, forciciumConsumed)
+		tagCompound.setInteger(TAG_CONSUMPTION_TICKS, consumptionTicks)
 	}
 
 	def getSizeInventory: Int = 1
@@ -89,7 +142,13 @@ class TileEntityFEExtractor extends MFFSMachineTileEntity with ISidedInventory {
 
 		slot match {
 			case 0 =>
-				return itemStack.getItem == ItemForcicium
+				itemStack.getItem match {
+					case ib: ItemBlock =>
+						return ib.field_150939_a == BlockForciciumBlock
+
+					case i: Item =>
+						return i == ItemForcicium
+				}
 		}
 
 		false

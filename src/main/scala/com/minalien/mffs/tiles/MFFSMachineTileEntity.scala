@@ -13,11 +13,14 @@ object MFFSMachineTileEntity {
 /**
  * Represents a Tile Entity for any MFFS Machine.
  */
-class MFFSMachineTileEntity extends TileEntity with HasForceEnergy {
+abstract class MFFSMachineTileEntity extends TileEntity with HasForceEnergy {
 	/**
 	 * Performs redstone-based activation.
 	 */
 	override def updateEntity() {
+		if(worldObj.isRemote)
+			return
+
 		// Check the redstone signal.
 		val currentlyActive = isActive
 		if(!currentlyActive && worldObj.getBlockPowerInput(xCoord, yCoord, zCoord) > 0)
@@ -32,7 +35,8 @@ class MFFSMachineTileEntity extends TileEntity with HasForceEnergy {
 	override def readFromNBT(tagCompound: NBTTagCompound) {
 		super.readFromNBT(tagCompound)
 
-		currentForceEnergy = tagCompound.getFloat(MFFSMachineTileEntity.NBT_TAG_FORCE_ENERGY_CURRENT)
+		val currentFE = tagCompound.getFloat(MFFSMachineTileEntity.NBT_TAG_FORCE_ENERGY_CURRENT)
+		setCurrentForceEnergy(currentFE)
 	}
 
 	override def writeToNBT(tagCompound: NBTTagCompound) {
