@@ -10,6 +10,7 @@ import net.minecraft.creativetab.CreativeTabs
 import com.minalien.mffs.world.MonazitOreWorldGenerator
 import com.minalien.mffs.proxy.CommonProxy
 import cpw.mods.fml.common.network.NetworkRegistry
+import net.minecraftforge.common.config.Configuration
 
 /**
  * Core mod object for the Modular Forcefield System mod.
@@ -45,6 +46,9 @@ object ModularForcefieldSystem {
 	 */
 	@EventHandler
 	def preInit(eventArgs: FMLPreInitializationEvent) {
+		// Load configuration data.
+		ModConfig.load(new Configuration(eventArgs.getSuggestedConfigurationFile))
+
 		// Register all mod blocks.
 		registerBlocks()
 
@@ -63,7 +67,8 @@ object ModularForcefieldSystem {
 		proxy.registerRenderers()
 
 		// Initialize World Generation.
-		GameRegistry.registerWorldGenerator(MonazitOreWorldGenerator, 0)
+		if(ModConfig.WorldGen.enableMonazitOre)
+			GameRegistry.registerWorldGenerator(MonazitOreWorldGenerator, 0)
 
 		// Register the GUI Handler.
 		NetworkRegistry.INSTANCE.registerGuiHandler(ModularForcefieldSystem, MFFSGUIHandler)
