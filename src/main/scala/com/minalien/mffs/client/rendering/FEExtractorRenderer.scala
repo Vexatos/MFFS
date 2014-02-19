@@ -90,7 +90,7 @@ object FEExtractorRenderer extends TileEntitySpecialRenderer {
 		fontRenderer.drawString(header, offsetX - (realSize / 2), offsetY - (realSize / 2) + (-2 *
 			lineHeight) - 1, 1)
 
-		val forceEnergy = tile.currentForceEnergy
+		val forceEnergy = tile.getCurrentForceEnergy
 		val feCapacity = tile.getForceEnergyCapacity
 		fontRenderer.drawString(s"FE: ${((forceEnergy / feCapacity) * 100).asInstanceOf[Int]}%", offsetX - (realSize / 2), offsetY - (realSize / 2) +
 				(2 * lineHeight), 1)

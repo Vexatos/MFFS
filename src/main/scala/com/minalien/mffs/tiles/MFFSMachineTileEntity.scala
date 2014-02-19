@@ -3,6 +3,7 @@ package com.minalien.mffs.tiles
 import net.minecraft.tileentity.TileEntity
 import com.minalien.mffs.blocks.MFFSMachineBlock
 import net.minecraft.nbt.NBTTagCompound
+import com.minalien.mffs.api.HasForceEnergy
 
 object MFFSMachineTileEntity {
 	val NBT_TAG_FORCE_ENERGY_CURRENT = "FORCE_ENERGY_CURRENT"
@@ -12,12 +13,7 @@ object MFFSMachineTileEntity {
 /**
  * Represents a Tile Entity for any MFFS Machine.
  */
-class MFFSMachineTileEntity extends TileEntity {
-	/**
-	 * Dictates the amount of Force Energy currently stored in the internal buffer.
-	 */
-	var currentForceEnergy: Float = 0.0f
-
+class MFFSMachineTileEntity extends TileEntity with HasForceEnergy {
 	/**
 	 * Performs redstone-based activation.
 	 */
@@ -44,11 +40,6 @@ class MFFSMachineTileEntity extends TileEntity {
 
 		tagCompound.setFloat(MFFSMachineTileEntity.NBT_TAG_FORCE_ENERGY_CURRENT, currentForceEnergy)
 	}
-
-	/**
-	 * @return The amount of Force Energy capable of being stored in the internal buffer.
-	 */
-	def getForceEnergyCapacity: Float = 0.0f
 
 	/**
 	 * Activates or deactivates the machine.

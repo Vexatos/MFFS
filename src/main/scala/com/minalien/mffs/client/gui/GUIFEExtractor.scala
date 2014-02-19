@@ -29,7 +29,7 @@ class GUIFEExtractor(tileEntity: TileEntityFEExtractor, playerInventory: Invento
 		val bufferHeight = 52
 		val bufferX = 116
 		val bufferY = 13
-		val storedEnergyHeight = ((tileEntity.currentForceEnergy / tileEntity.getForceEnergyCapacity) * bufferHeight
+		val storedEnergyHeight = ((tileEntity.getCurrentForceEnergy / tileEntity.getForceEnergyCapacity) * bufferHeight
 			.asInstanceOf[Float]).asInstanceOf[Int]
 		val storedBufferX = 177
 		val storedBufferY = 1 + bufferHeight - storedEnergyHeight

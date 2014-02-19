@@ -11,7 +11,6 @@ import net.minecraft.nbt.{NBTTagList, NBTTagCompound}
  */
 class TileEntityFEExtractor extends MFFSMachineTileEntity with ISidedInventory {
 	val TAG_FORCICIUM_STACK = "FORCICIUM_STACK"
-	currentForceEnergy = 1800f
 
 	override def getForceEnergyCapacity: Float = 1800.0f
 
