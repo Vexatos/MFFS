@@ -1,6 +1,6 @@
 package com.minalien.mffs.containers
 
-import net.minecraft.inventory.{Slot, IInventory, Container}
+import net.minecraft.inventory.{Slot, Container}
 import net.minecraft.entity.player.{InventoryPlayer, EntityPlayer}
 import com.minalien.mffs.tiles.TileEntityFEExtractor
 import net.minecraft.item.ItemStack

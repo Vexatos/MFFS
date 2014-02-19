@@ -6,7 +6,6 @@ import com.minalien.mffs.tiles.TileEntityFEExtractor
 import org.lwjgl.opengl.GL11
 import net.minecraftforge.common.util.ForgeDirection
 import com.minalien.mffs.blocks.MFFSMachineBlock
-import cpw.mods.fml.common.FMLLog
 
 /**
  * TESR responsible for rendering the Force Energy Extractor.

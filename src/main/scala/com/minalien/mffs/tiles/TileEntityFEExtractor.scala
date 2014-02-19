@@ -4,7 +4,7 @@ import net.minecraft.inventory.ISidedInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.entity.player.EntityPlayer
 import com.minalien.mffs.items.ItemForcicium
-import net.minecraft.nbt.{NBTTagList, NBTTagCompound}
+import net.minecraft.nbt.NBTTagCompound
 
 /**
  * Tile Entity responsible for the Force Energy Extractor.

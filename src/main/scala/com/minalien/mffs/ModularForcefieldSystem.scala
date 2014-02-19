@@ -11,6 +11,7 @@ import com.minalien.mffs.world.MonazitOreWorldGenerator
 import com.minalien.mffs.proxy.CommonProxy
 import cpw.mods.fml.common.network.NetworkRegistry
 import net.minecraftforge.common.config.Configuration
+import com.minalien.mffs.network.{NetworkUtil, MFFSPacketHandler}
 
 /**
  * Core mod object for the Modular Forcefield System mod.
@@ -63,6 +64,9 @@ object ModularForcefieldSystem {
 	 */
 	@EventHandler
 	def init(eventArgs: FMLInitializationEvent) {
+		// Initialize Networking.
+		NetworkUtil.channels = NetworkRegistry.INSTANCE.newChannel("MFFSClassic", MFFSPacketHandler)
+
 		// Initialize TESRs.
 		proxy.registerRenderers()
 
