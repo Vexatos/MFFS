@@ -17,11 +17,11 @@ class TileEntityFEExtractor extends MFFSMachineTileEntity with ISidedInventory {
 	val TAG_FORCICIUM_CONSUMED = "FORCICIUM_CONSUMED"
 	val TAG_CONSUMPTION_TICKS = "FORCICIUM_CONSUMPTION_TICKS"
 
-	override def getForceEnergyCapacity: Float = 1800.0f
-
 	var forciciumStack: ItemStack = null
 	var forciciumConsumed = 0
 	var consumptionTicks = 0
+
+	override def getForceEnergyCapacity = 1800.0f
 
 	override def updateEntity() {
 		super.updateEntity()
@@ -52,11 +52,8 @@ class TileEntityFEExtractor extends MFFSMachineTileEntity with ISidedInventory {
 			if(consumptionTicks >= ModConfig.ForceEnergy.forciciumConsumptionCycle) {
 				forciciumConsumed -= 1
 
-				currentForceEnergy += ModConfig.ForceEnergy.forceEnergyPerForcicium
-
-				// Send an update packet.
-				val energyPacket = PacketBuilder.BuildTileEnergyUpdatePacket(this)
-				NetworkUtil.sendToAll(energyPacket)
+				val currentEnergy = getCurrentForceEnergy + ModConfig.ForceEnergy.forceEnergyPerForcicium
+				setCurrentForceEnergy(currentEnergy)
 
 				consumptionTicks = 0
 			}

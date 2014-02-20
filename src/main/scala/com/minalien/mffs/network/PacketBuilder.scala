@@ -7,13 +7,18 @@ import com.minalien.mffs.tiles.MFFSMachineTileEntity
  */
 object PacketBuilder {
 	def BuildTileEnergyUpdatePacket(machineTile: MFFSMachineTileEntity): TileEnergyUpdatePacket = {
+		BuildTileEnergyUpdatePacket(machineTile.getWorldObj.provider.dimensionId, machineTile.xCoord,
+			machineTile.yCoord, machineTile.zCoord, machineTile.getCurrentForceEnergy)
+	}
+
+	def BuildTileEnergyUpdatePacket(dimensionId: Int, x: Int, y: Int, z: Int, energy: Float): TileEnergyUpdatePacket = {
 		val packet = new TileEnergyUpdatePacket
 
-		packet.dimensionId = machineTile.getWorldObj.provider.dimensionId
-		packet.x = machineTile.xCoord
-		packet.y = machineTile.yCoord
-		packet.z = machineTile.zCoord
-		packet.storedEnergy = machineTile.getCurrentForceEnergy
+		packet.dimensionId = dimensionId
+		packet.x = x
+		packet.y = y
+		packet.z = z
+		packet.storedEnergy = energy
 
 		packet
 	}

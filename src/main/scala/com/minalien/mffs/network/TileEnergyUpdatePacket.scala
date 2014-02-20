@@ -3,6 +3,8 @@ package com.minalien.mffs.network
 import io.netty.buffer.ByteBuf
 import cpw.mods.fml.common.FMLLog
 import net.minecraftforge.common.DimensionManager
+import com.minalien.mffs.power.PowerMap
+import com.minalien.mffs.ModularForcefieldSystem
 
 /**
  * Updates a Tile Entity's Stored & Capacity for Force Energy.
@@ -15,19 +17,19 @@ class TileEnergyUpdatePacket extends MFFSPacket {
 	var storedEnergy: Float = 0f
 
 	override def read(data: ByteBuf) {
+		if(ModularForcefieldSystem.proxy.isServer) {
+			FMLLog.warning("Error: Received a TileEnergyUpdatePacket from the client!")
+			return
+		}
+
 		dimensionId = data.readInt()
 		x = data.readInt()
 		y = data.readInt()
 		z = data.readInt()
 		storedEnergy = data.readFloat()
 
-		val tileEntity = DimensionManager.getWorld(dimensionId).getTileEntity(x, y, z)
-		if(tileEntity == null) {
-			FMLLog.warning(s"Received MFFS:TileEnergyUpdatePacket for a TileEntity that does not exist!")
-			return
-		}
+		PowerMap.setCurrentPower(dimensionId, x, y, z, storedEnergy)
 
-		tileEntity.setCurrentForceEnergy(storedEnergy)
 	}
 
 	override def write(data: ByteBuf) {

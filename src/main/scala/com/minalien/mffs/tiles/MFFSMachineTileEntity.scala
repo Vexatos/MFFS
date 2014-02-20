@@ -4,6 +4,7 @@ import net.minecraft.tileentity.TileEntity
 import com.minalien.mffs.blocks.MFFSMachineBlock
 import net.minecraft.nbt.NBTTagCompound
 import com.minalien.mffs.api.HasForceEnergy
+import com.minalien.mffs.power.PowerMap
 
 object MFFSMachineTileEntity {
 	val NBT_TAG_FORCE_ENERGY_CURRENT = "FORCE_ENERGY_CURRENT"
@@ -14,6 +15,15 @@ object MFFSMachineTileEntity {
  * Represents a Tile Entity for any MFFS Machine.
  */
 abstract class MFFSMachineTileEntity extends TileEntity with HasForceEnergy {
+	def getCurrentForceEnergy = PowerMap.getCurrentPower(worldObj.provider.dimensionId, xCoord, yCoord, zCoord)
+
+	def setCurrentForceEnergy(value: Float) {
+		var energyVal = Math.max(value, 0)
+		energyVal = Math.min(value, getForceEnergyCapacity)
+
+		PowerMap.setCurrentPower(worldObj.provider.dimensionId, xCoord, yCoord, zCoord, energyVal)
+	}
+
 	/**
 	 * Performs redstone-based activation.
 	 */
@@ -36,13 +46,13 @@ abstract class MFFSMachineTileEntity extends TileEntity with HasForceEnergy {
 		super.readFromNBT(tagCompound)
 
 		val currentFE = tagCompound.getFloat(MFFSMachineTileEntity.NBT_TAG_FORCE_ENERGY_CURRENT)
-		setCurrentForceEnergy(currentFE)
+		PowerMap.setCurrentPower(worldObj.provider.dimensionId, xCoord, yCoord, zCoord, currentFE)
 	}
 
 	override def writeToNBT(tagCompound: NBTTagCompound) {
 		super.writeToNBT(tagCompound)
 
-		tagCompound.setFloat(MFFSMachineTileEntity.NBT_TAG_FORCE_ENERGY_CURRENT, currentForceEnergy)
+		tagCompound.setFloat(MFFSMachineTileEntity.NBT_TAG_FORCE_ENERGY_CURRENT, getCurrentForceEnergy)
 	}
 
 	/**
