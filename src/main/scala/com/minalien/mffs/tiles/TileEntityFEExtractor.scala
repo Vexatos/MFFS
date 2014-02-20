@@ -7,7 +7,7 @@ import com.minalien.mffs.items.ItemForcicium
 import net.minecraft.nbt.NBTTagCompound
 import com.minalien.mffs.blocks.BlockForciciumBlock
 import com.minalien.mffs.ModConfig
-import com.minalien.mffs.network.{NetworkUtil, PacketBuilder}
+import com.minalien.mffs.network.NetworkUtil
 
 /**
  * Tile Entity responsible for the Force Energy Extractor.

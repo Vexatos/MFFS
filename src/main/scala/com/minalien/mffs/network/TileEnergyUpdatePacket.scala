@@ -2,7 +2,6 @@ package com.minalien.mffs.network
 
 import io.netty.buffer.ByteBuf
 import cpw.mods.fml.common.FMLLog
-import net.minecraftforge.common.DimensionManager
 import com.minalien.mffs.power.PowerMap
 import com.minalien.mffs.ModularForcefieldSystem
 
