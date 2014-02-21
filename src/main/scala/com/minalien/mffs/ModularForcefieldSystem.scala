@@ -5,7 +5,7 @@ import cpw.mods.fml.common.Mod.{Instance, EventHandler}
 import cpw.mods.fml.common.event.{FMLInitializationEvent, FMLPreInitializationEvent}
 import cpw.mods.fml.common.registry.GameRegistry
 import com.minalien.mffs.blocks._
-import com.minalien.mffs.items.ItemForcicium
+import com.minalien.mffs.items.{ItemMFFSCard, ItemForcicium}
 import net.minecraft.creativetab.CreativeTabs
 import com.minalien.mffs.world.MonazitOreWorldGenerator
 import com.minalien.mffs.proxy.CommonProxy
@@ -103,5 +103,6 @@ object ModularForcefieldSystem {
 	 */
 	def registerItems() {
 		GameRegistry.registerItem(ItemForcicium, ItemForcicium.getUnlocalizedName)
+		GameRegistry.registerItem(ItemMFFSCard, ItemMFFSCard.getUnlocalizedName)
 	}
 }
