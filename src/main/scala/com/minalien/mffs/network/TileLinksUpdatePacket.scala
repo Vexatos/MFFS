@@ -1,23 +1,23 @@
 package com.minalien.mffs.network
 
 import io.netty.buffer.ByteBuf
+import com.minalien.mffs.ModularForcefieldSystem
 import cpw.mods.fml.common.FMLLog
 import com.minalien.mffs.power.PowerMap
-import com.minalien.mffs.ModularForcefieldSystem
 
 /**
- * Updates a Tile Entity's Stored Force Energy.
+ * Updates a Tile Entity's Link Count
  */
-class TileEnergyUpdatePacket extends MFFSPacket {
+class TileLinksUpdatePacket extends MFFSPacket {
 	var dimensionId: Int = 0
 	var x: Int = 0
 	var y: Int = 0
 	var z: Int = 0
-	var storedEnergy: Float = 0f
+	var numLinks: Int = 0
 
 	override def read(data: ByteBuf) {
 		if(ModularForcefieldSystem.proxy.isServer) {
-			FMLLog.warning("Error: Received a TileEnergyUpdatePacket from the client!")
+			FMLLog.warning("Error: Received a TileLinksUpdatePacket from the client!")
 			return
 		}
 
@@ -25,10 +25,9 @@ class TileEnergyUpdatePacket extends MFFSPacket {
 		x = data.readInt()
 		y = data.readInt()
 		z = data.readInt()
-		storedEnergy = data.readFloat()
+		numLinks = data.readInt()
 
-		PowerMap.setCurrentPower(dimensionId, x, y, z, storedEnergy)
-
+		PowerMap.setNumLinks(dimensionId, x, y, z, numLinks)
 	}
 
 	override def write(data: ByteBuf) {
@@ -36,6 +35,6 @@ class TileEnergyUpdatePacket extends MFFSPacket {
 		data.writeInt(x)
 		data.writeInt(y)
 		data.writeInt(z)
-		data.writeFloat(storedEnergy)
+		data.writeInt(numLinks)
 	}
 }
