@@ -16,10 +16,10 @@ object MFFSGUIHandler extends IGuiHandler {
 
 		tileEntity match {
 			case te: TileEntityFEExtractor =>
-				return new GUIFEExtractor(tileEntity.asInstanceOf[TileEntityFEExtractor], player.inventory)
+				new GUIFEExtractor(tileEntity.asInstanceOf[TileEntityFEExtractor], player.inventory)
+			case _ =>
+				null
 		}
-
-		null
 	}
 
 	override def getServerGuiElement(ID: Int, player: EntityPlayer, world: World, x: Int, y: Int, z: Int): AnyRef = {
@@ -27,9 +27,10 @@ object MFFSGUIHandler extends IGuiHandler {
 
 		tileEntity match {
 			case te: TileEntityFEExtractor =>
-				return new ContainerFEExtractor(tileEntity.asInstanceOf[TileEntityFEExtractor], player.inventory)
-		}
+				new ContainerFEExtractor(tileEntity.asInstanceOf[TileEntityFEExtractor], player.inventory)
 
-		null
+			case _ =>
+				null
+		}
 	}
 }

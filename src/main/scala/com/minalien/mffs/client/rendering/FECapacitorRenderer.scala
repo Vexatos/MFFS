@@ -2,20 +2,20 @@ package com.minalien.mffs.client.rendering
 
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer
 import net.minecraft.tileentity.TileEntity
-import com.minalien.mffs.tiles.TileEntityFEExtractor
-import org.lwjgl.opengl.GL11
+import com.minalien.mffs.tiles.TileEntityFECapacitor
 import net.minecraftforge.common.util.ForgeDirection
 import com.minalien.mffs.blocks.MFFSMachineBlock
+import org.lwjgl.opengl.GL11
 
 /**
- * TESR responsible for rendering the Force Energy Extractor.
+ * TESR responsible for rendering the Force Energy Capacitor.
  */
-object FEExtractorRenderer extends TileEntitySpecialRenderer {
+object FECapacitorRenderer extends TileEntitySpecialRenderer {
 	override def renderTileEntityAt(tileEntity: TileEntity, x: Double, y: Double, z: Double, w: Float) {
-		if(!tileEntity.isInstanceOf[TileEntityFEExtractor])
+		if(!tileEntity.isInstanceOf[TileEntityFECapacitor])
 			return
 
-		val tile = tileEntity.asInstanceOf[TileEntityFEExtractor]
+		val tile = tileEntity.asInstanceOf[TileEntityFECapacitor]
 		val metadata = tileEntity.getWorldObj.getBlockMetadata(tile.xCoord, tile.yCoord, tile.zCoord)
 		val direction = ForgeDirection.getOrientation(metadata & MFFSMachineBlock.ROTATION_MASK)
 
@@ -62,7 +62,7 @@ object FEExtractorRenderer extends TileEntitySpecialRenderer {
 		GL11.glColor4f(1f, 1f, 1f, 1f)
 
 		val fontRenderer = this.func_147498_b()
-		val header = "FE Extractor"
+		val header = "FE Capacitor"
 		val maxWidth = Math.max(fontRenderer.getStringWidth(header), 1) + 4
 		val lineHeight = fontRenderer.FONT_HEIGHT + 2
 
@@ -92,7 +92,7 @@ object FEExtractorRenderer extends TileEntitySpecialRenderer {
 		val forceEnergy = tile.getCurrentForceEnergy
 		val feCapacity = tile.getForceEnergyCapacity
 		fontRenderer.drawString(s"FE: ${((forceEnergy / feCapacity) * 100).asInstanceOf[Int]}%", offsetX - (realSize / 2), offsetY - (realSize / 2) +
-				lineHeight, 1)
+			lineHeight, 1)
 		fontRenderer.drawString(s"$forceEnergy", offsetX - (realSize / 2), offsetY - (realSize / 2) + (2 *
 			lineHeight), 1)
 		fontRenderer.drawString(s"/$feCapacity", offsetX - (realSize / 2), offsetY - (realSize / 2) + (3 *

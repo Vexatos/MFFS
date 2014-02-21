@@ -15,6 +15,9 @@ object MFFSMachineTileEntity {
  * Represents a Tile Entity for any MFFS Machine.
  */
 abstract class MFFSMachineTileEntity extends TileEntity with HasForceEnergy {
+	private var _currentFE: Float = 0
+	private var _initialized: Boolean = false
+
 	def getCurrentForceEnergy = PowerMap.getCurrentPower(worldObj.provider.dimensionId, xCoord, yCoord, zCoord)
 
 	def setCurrentForceEnergy(value: Float) {
@@ -31,6 +34,9 @@ abstract class MFFSMachineTileEntity extends TileEntity with HasForceEnergy {
 		if(worldObj.isRemote)
 			return
 
+		if(!_initialized)
+			initialize()
+
 		// Check the redstone signal.
 		val currentlyActive = isActive
 		if(!currentlyActive && worldObj.getBlockPowerInput(xCoord, yCoord, zCoord) > 0)
@@ -45,14 +51,19 @@ abstract class MFFSMachineTileEntity extends TileEntity with HasForceEnergy {
 	override def readFromNBT(tagCompound: NBTTagCompound) {
 		super.readFromNBT(tagCompound)
 
-		val currentFE = tagCompound.getFloat(MFFSMachineTileEntity.NBT_TAG_FORCE_ENERGY_CURRENT)
-		PowerMap.setCurrentPower(worldObj.provider.dimensionId, xCoord, yCoord, zCoord, currentFE)
+		_currentFE = tagCompound.getFloat(MFFSMachineTileEntity.NBT_TAG_FORCE_ENERGY_CURRENT)
 	}
 
 	override def writeToNBT(tagCompound: NBTTagCompound) {
 		super.writeToNBT(tagCompound)
 
 		tagCompound.setFloat(MFFSMachineTileEntity.NBT_TAG_FORCE_ENERGY_CURRENT, getCurrentForceEnergy)
+	}
+
+	def initialize() {
+		PowerMap.setCurrentPower(worldObj.provider.dimensionId, xCoord, yCoord, zCoord, _currentFE)
+
+		_initialized = true
 	}
 
 	/**

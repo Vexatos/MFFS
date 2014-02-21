@@ -95,6 +95,7 @@ object ModularForcefieldSystem {
 
 		// Register machine blocks.
 		registerMachineBlock(BlockFEExtractor)
+		registerMachineBlock(BlockFECapacitor)
 	}
 
 	/**
