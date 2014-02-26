@@ -8,6 +8,8 @@ import net.minecraft.init.Items
 import net.minecraftforge.common.util.ForgeDirection
 import com.minalien.mffs.ModularForcefieldSystem
 import com.minalien.mffs.items.ItemMFFSCard
+import net.minecraft.block.Block
+import com.minalien.mffs.power.PowerMap
 
 /**
  * Force Energy Capacitor
@@ -48,5 +50,4 @@ object BlockFECapacitor extends MFFSMachineBlock("fecapacitor") {
 
 		true
 	}
-
 }

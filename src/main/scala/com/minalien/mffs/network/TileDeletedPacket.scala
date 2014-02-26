@@ -2,18 +2,16 @@ package com.minalien.mffs.network
 
 import io.netty.buffer.ByteBuf
 import com.minalien.mffs.ModularForcefieldSystem
-import cpw.mods.fml.common.FMLLog
 import com.minalien.mffs.power.PowerMap
 
 /**
- * Updates a Tile Entity's Link Count
+ * Deletes a tile's data from PowerMap.
  */
-class TileLinksUpdatePacket extends MFFSPacket {
+class TileDeletedPacket extends MFFSPacket {
 	var dimensionId: Int = 0
 	var x: Int = 0
 	var y: Int = 0
 	var z: Int = 0
-	var numLinks: Int = 0
 
 	override def read(data: ByteBuf) {
 		if(ModularForcefieldSystem.proxy.isServer)
@@ -23,9 +21,8 @@ class TileLinksUpdatePacket extends MFFSPacket {
 		x = data.readInt()
 		y = data.readInt()
 		z = data.readInt()
-		numLinks = data.readInt()
 
-		PowerMap.setNumLinks(dimensionId, x, y, z, numLinks)
+		PowerMap.deleteTile(dimensionId, x, y, z)
 	}
 
 	override def write(data: ByteBuf) {
@@ -33,6 +30,5 @@ class TileLinksUpdatePacket extends MFFSPacket {
 		data.writeInt(x)
 		data.writeInt(y)
 		data.writeInt(z)
-		data.writeInt(numLinks)
 	}
 }

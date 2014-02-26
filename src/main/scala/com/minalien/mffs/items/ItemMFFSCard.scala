@@ -12,6 +12,7 @@ import com.minalien.mffs.tiles.{TileEntityFECapacitor, MFFSMachineTileEntity}
 import com.minalien.mffs.items.cards.PositionalCardData
 import net.minecraftforge.common.DimensionManager
 import com.minalien.mffs.util.NBTTagCompoundHelper
+import com.minalien.mffs.power.PowerMap
 
 object CardType extends Enumeration {
 	type CardType = Value
@@ -105,7 +106,13 @@ object ItemMFFSCard extends MFFSItem("mffscard") {
 				val dimName: String = DimensionManager.getProvider(cardData.dimensionId).getDimensionName
 
 				infoListAsString.add(s"Linked to: (§a${cardData.xCoord}§r,§a${cardData.yCoord}§r," +
-					s"§a${cardData.zCoord}§r) [Dim: §${if(isInDimension) "a" else "c" }$dimName§r]")
+					s"§a${cardData.zCoord}§r)")
+
+				infoListAsString.add(s"Dim: §${if(isInDimension) "a" else "c" }$dimName§r")
+
+				infoListAsString.add(s"§${if(PowerMap.isTileValid(cardData.dimensionId, cardData.xCoord,
+					cardData.yCoord, cardData.zCoord)) "aValid" else "cInvalid" }")
+
 				return
 
 			// Default

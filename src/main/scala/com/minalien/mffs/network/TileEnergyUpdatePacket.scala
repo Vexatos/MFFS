@@ -16,10 +16,8 @@ class TileEnergyUpdatePacket extends MFFSPacket {
 	var storedEnergy: Float = 0f
 
 	override def read(data: ByteBuf) {
-		if(ModularForcefieldSystem.proxy.isServer) {
-			FMLLog.warning("Error: Received a TileEnergyUpdatePacket from the client!")
+		if(ModularForcefieldSystem.proxy.isServer)
 			return
-		}
 
 		dimensionId = data.readInt()
 		x = data.readInt()

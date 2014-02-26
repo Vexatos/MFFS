@@ -31,6 +31,22 @@ class TileEntityFEExtractor extends MFFSMachineTileEntity with ISidedInventory {
 		if(worldObj.isRemote || !isActive)
 			return
 
+		var capacitorTile: TileEntityFECapacitor = null
+		if(powerLinkStack != null) {
+			capacitorTile = PositionalCardData.getTileEntityAtLocation(powerLinkStack)
+				.asInstanceOf[TileEntityFECapacitor]
+
+			if(capacitorTile != null) {
+				val maxEnergyTransfer = capacitorTile.getForceEnergyCapacity - capacitorTile.getCurrentForceEnergy
+				if(getCurrentForceEnergy > 0 && maxEnergyTransfer > 0) {
+					val energyToTransfer = if(getCurrentForceEnergy > maxEnergyTransfer) maxEnergyTransfer else getCurrentForceEnergy
+
+					setCurrentForceEnergy(getCurrentForceEnergy - energyToTransfer)
+					capacitorTile.setCurrentForceEnergy(capacitorTile.getCurrentForceEnergy + energyToTransfer)
+				}
+			}
+		}
+
 		if(forciciumConsumed == 0) {
 			if(forciciumStack != null && isItemValidForSlot(0, forciciumStack) && getCurrentForceEnergy < getForceEnergyCapacity) {
 				forciciumStack.getItem match {
@@ -53,9 +69,20 @@ class TileEntityFEExtractor extends MFFSMachineTileEntity with ISidedInventory {
 
 			if(consumptionTicks >= ModConfig.ForceEnergy.forciciumConsumptionCycle) {
 				forciciumConsumed -= 1
+				var transferredEnergy = false
 
-				val currentEnergy = getCurrentForceEnergy + ModConfig.ForceEnergy.forceEnergyPerForcicium
-				setCurrentForceEnergy(currentEnergy)
+				if(powerLinkStack != null && capacitorTile != null) {
+					if(capacitorTile.getCurrentForceEnergy < capacitorTile.getForceEnergyCapacity) {
+						capacitorTile.setCurrentForceEnergy(capacitorTile.getCurrentForceEnergy + ModConfig
+							.ForceEnergy.forceEnergyPerForcicium)
+						transferredEnergy = true
+					}
+				}
+
+				if(!transferredEnergy) {
+					val currentEnergy = getCurrentForceEnergy + ModConfig.ForceEnergy.forceEnergyPerForcicium
+					setCurrentForceEnergy(currentEnergy)
+				}
 
 				consumptionTicks = 0
 			}

@@ -61,7 +61,7 @@ object PowerMap {
 			dataMap += (dimensionId, x, y, z) -> new TileData(numLinks, 0f)
 
 		if(ModularForcefieldSystem.proxy.isServer) {
-			val linksPacket = PacketBuilder.BuildTileLinksUpdatePacket(dimensionId, x, y, z, numLinks)
+			val linksPacket = PacketBuilder.buildTileLinksUpdatePacket(dimensionId, x, y, z, numLinks)
 			NetworkUtil.sendToAll(linksPacket)
 		}
 	}
@@ -89,8 +89,20 @@ object PowerMap {
 
 		if(ModularForcefieldSystem.proxy.isServer) {
 			// Send an update packet.
-			val energyPacket = PacketBuilder.BuildTileEnergyUpdatePacket(dimensionId, x, y, z, currentEnergy)
+			val energyPacket = PacketBuilder.buildTileEnergyUpdatePacket(dimensionId, x, y, z, currentEnergy)
 			NetworkUtil.sendToAll(energyPacket)
 		}
 	}
+
+	def deleteTile(dimensionId: Int, x: Int, y: Int, z: Int) {
+		if(dataMap contains (dimensionId, x, y, z))
+			dataMap.remove((dimensionId, x, y, z))
+
+		if(ModularForcefieldSystem.proxy.isServer) {
+			val deletedPacket = PacketBuilder.buildTileDeletedPacket(dimensionId, x, y, z)
+			NetworkUtil.sendToAll(deletedPacket)
+		}
+	}
+
+	def isTileValid(dimensionId: Int, x: Int, y: Int, z: Int): Boolean = dataMap contains (dimensionId, x, y, z)
 }

@@ -10,6 +10,7 @@ import io.netty.buffer.ByteBuf
 object MFFSPacketHandler extends FMLIndexedMessageToMessageCodec[MFFSPacket] {
 	addDiscriminator(0, classOf[TileEnergyUpdatePacket])
 	addDiscriminator(1, classOf[TileLinksUpdatePacket])
+	addDiscriminator(2, classOf[TileDeletedPacket])
 
 	override def encodeInto(channelHandlerContext: ChannelHandlerContext, packet: MFFSPacket, data: ByteBuf) {
 		packet.write(data)

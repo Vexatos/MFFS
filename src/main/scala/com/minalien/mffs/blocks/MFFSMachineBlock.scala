@@ -1,6 +1,6 @@
 package com.minalien.mffs.blocks
 
-import net.minecraft.block.BlockContainer
+import net.minecraft.block.{Block, BlockContainer}
 import net.minecraft.block.material.Material
 import com.minalien.mffs.ModularForcefieldSystem
 import net.minecraft.util.IIcon
@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.texture.IIconRegister
 import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraft.world.World
+import com.minalien.mffs.power.PowerMap
 
 object MFFSMachineBlock {
 	/**
@@ -101,5 +102,11 @@ abstract class MFFSMachineBlock(unlocalizedName: String) extends BlockContainer(
 		world.setBlockMetadataWithNotify(x, y, z, metadata, 2)
 
 		true
+	}
+
+	override def breakBlock(world: World, x: Int, y: Int, z: Int, block: Block, unk: Int) {
+		super.breakBlock(world, x, y, z, block, unk)
+
+		PowerMap.deleteTile(world.provider.dimensionId, x, y, z)
 	}
 }

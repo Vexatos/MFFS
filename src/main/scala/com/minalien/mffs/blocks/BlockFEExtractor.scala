@@ -36,16 +36,17 @@ object BlockFEExtractor extends MFFSMachineBlock("feextractor") {
 					return true
 
 				case ItemMFFSCard =>
-					if(tileEntity.isItemValidForSlot(1, player.getHeldItem)) {
+					if(tileEntity.isItemValidForSlot(1, player.getHeldItem) && tileEntity.powerLinkStack == null) {
 						tileEntity.setInventorySlotContents(1, player.getHeldItem)
 						player.destroyCurrentEquippedItem()
 						return true
 					}
+
+				case _ =>
 			}
 		}
 
 		player.openGui(ModularForcefieldSystem, 0, world, x, y, z)
-
 		true
 	}
 }
