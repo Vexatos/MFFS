@@ -30,9 +30,17 @@ object BlockFECapacitor extends MFFSMachineBlock("fecapacitor") {
 			return false
 
 		if(player.getHeldItem != null) {
-			if(player.getHeldItem.getItem == Items.stick) {
-				rotateBlock(world, x, y, z, ForgeDirection.getOrientation(side))
-				return true
+			player.getHeldItem.getItem match {
+				case Items.stick =>
+					rotateBlock(world, x, y, z, ForgeDirection.getOrientation(side))
+					return true
+
+				case ItemMFFSCard =>
+					if(tileEntity.isItemValidForSlot(1, player.getHeldItem)) {
+						tileEntity.setInventorySlotContents(1, player.getHeldItem)
+						player.destroyCurrentEquippedItem()
+						return true
+					}
 			}
 		}
 
