@@ -105,8 +105,8 @@ abstract class MFFSMachineBlock(unlocalizedName: String) extends BlockContainer(
 	}
 
 	override def breakBlock(world: World, x: Int, y: Int, z: Int, block: Block, unk: Int) {
-		super.breakBlock(world, x, y, z, block, unk)
-
 		PowerMap.deleteTile(world.provider.dimensionId, x, y, z)
+
+		super.breakBlock(world, x, y, z, block, unk)
 	}
 }

@@ -32,7 +32,7 @@ class TileEntityFEExtractor extends MFFSMachineTileEntity with ISidedInventory {
 			return
 
 		var capacitorTile: TileEntityFECapacitor = null
-		if(powerLinkStack != null) {
+		if(powerLinkStack != null && canAccessLinkedCapacitor) {
 			capacitorTile = PositionalCardData.getTileEntityAtLocation(powerLinkStack)
 				.asInstanceOf[TileEntityFECapacitor]
 

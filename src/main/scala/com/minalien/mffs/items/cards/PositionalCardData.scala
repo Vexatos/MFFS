@@ -7,10 +7,14 @@ import com.minalien.mffs.items.{CardType, ItemMFFSCard}
 import net.minecraftforge.common.DimensionManager
 
 object PositionalCardData {
+	val TAG_DIMENSION_ID = "POSITIONAL_CARD_DIMENSION_ID"
+	val TAG_X_COORD = "POSITIONAL_CARD_X_COORD"
+	val TAG_Y_COORD = "POSITIONAL_CARD_Y_COORD"
+	val TAG_Z_COORD = "POSITIONAL_CARD_Z_COORD"
+
 	def getTileEntityAtLocation(itemStack: ItemStack): TileEntity = {
 		if(itemStack.getItem == ItemMFFSCard && ItemMFFSCard.getCardType(itemStack) == CardType.PowerLink) {
-			val cardData = new PositionalCardData(0, 0, 0, 0)
-			cardData.fromItemStack(itemStack)
+			val cardData = PositionalCardData.fromItemStack(itemStack)
 			val world = DimensionManager.getWorld(cardData.dimensionId)
 
 			if(world != null)
@@ -21,32 +25,29 @@ object PositionalCardData {
 		else
 			null
 	}
+
+	def fromItemStack(itemStack: ItemStack): PositionalCardData = {
+		val tagCompound = NBTTagCompoundHelper.getTagFromItemStack(itemStack)
+
+		val dimensionId = tagCompound.getInteger(TAG_DIMENSION_ID)
+		val xCoord = tagCompound.getInteger(TAG_X_COORD)
+		val yCoord = tagCompound.getInteger(TAG_Y_COORD)
+		val zCoord = tagCompound.getInteger(TAG_Z_COORD)
+
+		new PositionalCardData(dimensionId, xCoord, yCoord, zCoord)
+	}
 }
 
 /**
  * Utility class for cards containing positional data.
  */
 class PositionalCardData(var dimensionId: Int, var xCoord: Int, var yCoord: Int, var zCoord: Int) {
-	val TAG_DIMENSION_ID = "POSITIONAL_CARD_DIMENSION_ID"
-	val TAG_X_COORD = "POSITIONAL_CARD_X_COORD"
-	val TAG_Y_COORD = "POSITIONAL_CARD_Y_COORD"
-	val TAG_Z_COORD = "POSITIONAL_CARD_Z_COORD"
-
-	def fromItemStack(itemStack: ItemStack) {
-		val tagCompound = NBTTagCompoundHelper.getTagFromItemStack(itemStack)
-
-		dimensionId = tagCompound.getInteger(TAG_DIMENSION_ID)
-		xCoord = tagCompound.getInteger(TAG_X_COORD)
-		yCoord = tagCompound.getInteger(TAG_Y_COORD)
-		zCoord = tagCompound.getInteger(TAG_Z_COORD)
-	}
-
 	def saveToItemStack(itemStack: ItemStack) {
 		val tagCompound = NBTTagCompoundHelper.getTagFromItemStack(itemStack)
 
-		tagCompound.setInteger(TAG_DIMENSION_ID, dimensionId)
-		tagCompound.setInteger(TAG_X_COORD, xCoord)
-		tagCompound.setInteger(TAG_Y_COORD, yCoord)
-		tagCompound.setInteger(TAG_Z_COORD, zCoord)
+		tagCompound.setInteger(PositionalCardData.TAG_DIMENSION_ID, dimensionId)
+		tagCompound.setInteger(PositionalCardData.TAG_X_COORD, xCoord)
+		tagCompound.setInteger(PositionalCardData.TAG_Y_COORD, yCoord)
+		tagCompound.setInteger(PositionalCardData.TAG_Z_COORD, zCoord)
 	}
 }

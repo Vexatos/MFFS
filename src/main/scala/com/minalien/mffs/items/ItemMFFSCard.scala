@@ -98,9 +98,7 @@ object ItemMFFSCard extends MFFSItem("mffscard") {
 		cardType match {
 			// Cards with positional data.
 			case CardType.PowerLink =>
-				val cardData: PositionalCardData = new PositionalCardData(0, 0, 0, 0)
-
-				cardData.fromItemStack(itemStack)
+				val cardData = PositionalCardData.fromItemStack(itemStack)
 
 				val isInDimension: Boolean = player.worldObj.provider.dimensionId == cardData.dimensionId
 				val dimName: String = DimensionManager.getProvider(cardData.dimensionId).getDimensionName

@@ -34,6 +34,16 @@ abstract class MFFSMachineTileEntity extends TileEntity with HasForceEnergy {
 		PowerMap.setCurrentPower(worldObj.provider.dimensionId, xCoord, yCoord, zCoord, energyVal)
 	}
 
+	def canAccessLinkedCapacitor: Boolean = {
+		if(powerLinkStack == null || powerLinkStack.getItem != ItemMFFSCard || ItemMFFSCard.getCardType
+			(powerLinkStack) != CardType.PowerLink)
+			return false
+
+		val cardData = PositionalCardData.fromItemStack(powerLinkStack)
+
+		worldObj.provider.dimensionId == cardData.dimensionId
+	}
+
 	/**
 	 * Performs redstone-based activation.
 	 */

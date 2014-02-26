@@ -5,6 +5,8 @@ import com.minalien.mffs.network.{NetworkUtil, PacketBuilder}
 import net.minecraft.tileentity.TileEntity
 import com.minalien.mffs.ModularForcefieldSystem
 import net.minecraftforge.common.DimensionManager
+import com.minalien.mffs.tiles.MFFSMachineTileEntity
+import com.minalien.mffs.items.cards.PositionalCardData
 
 /**
  * Stores current power stored in objects within the world.
@@ -95,12 +97,21 @@ object PowerMap {
 	}
 
 	def deleteTile(dimensionId: Int, x: Int, y: Int, z: Int) {
-		if(dataMap contains (dimensionId, x, y, z))
+		if(dataMap contains (dimensionId, x, y, z)) {
 			dataMap.remove((dimensionId, x, y, z))
 
-		if(ModularForcefieldSystem.proxy.isServer) {
-			val deletedPacket = PacketBuilder.buildTileDeletedPacket(dimensionId, x, y, z)
-			NetworkUtil.sendToAll(deletedPacket)
+			val tileEntity = DimensionManager.getWorld(dimensionId).getTileEntity(x, y, z).asInstanceOf[MFFSMachineTileEntity]
+			if(tileEntity != null && tileEntity.powerLinkStack != null) {
+				val cardData = PositionalCardData.fromItemStack(tileEntity.powerLinkStack)
+
+				if(dataMap contains (cardData.dimensionId, cardData.xCoord, cardData.yCoord, cardData.zCoord))
+					decNumLinks(cardData.dimensionId, cardData.xCoord, cardData.yCoord, cardData.zCoord)
+			}
+
+			if(ModularForcefieldSystem.proxy.isServer) {
+				val deletedPacket = PacketBuilder.buildTileDeletedPacket(dimensionId, x, y, z)
+				NetworkUtil.sendToAll(deletedPacket)
+			}
 		}
 	}
 
