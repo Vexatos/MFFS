@@ -9,5 +9,5 @@ import net.minecraftforge.common.DimensionManager
 class CommonProxy {
 	def registerRenderers() {}
 
-	def isServer = DimensionManager.getWorld(0).isRemote
+	def isServer = !DimensionManager.getWorld(0).isRemote
 }
