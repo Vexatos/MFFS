@@ -10,11 +10,13 @@ import net.minecraft.item.ItemStack
  */
 class ContainerFEExtractor(tileEntity: TileEntityFEExtractor, playerInventory: InventoryPlayer) extends Container {
 	final val SLOT_FORCICIUM = 0
+	final val SLOT_POWER_LINK = 1
 
-	final val INVENTORY_SLOT_COUNT = 1
+	final val INVENTORY_SLOT_COUNT = 2
 
 	// Bind the Container Inventory
 	addSlotToContainer(new Slot(tileEntity, SLOT_FORCICIUM, 44, 31))
+	addSlotToContainer(new Slot(tileEntity, SLOT_POWER_LINK, 154, 6))
 
 	// Bind the Player Inventory
 	for(y <- 0 to 2) {
@@ -31,7 +33,7 @@ class ContainerFEExtractor(tileEntity: TileEntityFEExtractor, playerInventory: I
 
 	override def transferStackInSlot(player: EntityPlayer, slot: Int): ItemStack = {
 		var stack: ItemStack = null
-		val slotObj = inventorySlots.get(0).asInstanceOf[Slot]
+		val slotObj = inventorySlots.get(slot).asInstanceOf[Slot]
 
 		if(slotObj != null && slotObj.getHasStack) {
 			val stackInSlot = slotObj.getStack

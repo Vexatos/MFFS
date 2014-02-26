@@ -5,6 +5,9 @@ import com.minalien.mffs.blocks.MFFSMachineBlock
 import net.minecraft.nbt.NBTTagCompound
 import com.minalien.mffs.api.HasForceEnergy
 import com.minalien.mffs.power.PowerMap
+import net.minecraft.item.ItemStack
+import com.minalien.mffs.items.cards.PositionalCardData
+import com.minalien.mffs.items.{CardType, ItemMFFSCard}
 
 object MFFSMachineTileEntity {
 	val NBT_TAG_FORCE_ENERGY_CURRENT = "FORCE_ENERGY_CURRENT"
@@ -15,8 +18,12 @@ object MFFSMachineTileEntity {
  * Represents a Tile Entity for any MFFS Machine.
  */
 abstract class MFFSMachineTileEntity extends TileEntity with HasForceEnergy {
+	val TAG_POWER_LINK_STACK = "POWER_LINK_STACK"
+
 	private var _currentFE: Float = 0
 	private var _initialized: Boolean = false
+
+	var powerLinkStack: ItemStack = null
 
 	def getCurrentForceEnergy = PowerMap.getCurrentPower(worldObj.provider.dimensionId, xCoord, yCoord, zCoord)
 
@@ -52,16 +59,31 @@ abstract class MFFSMachineTileEntity extends TileEntity with HasForceEnergy {
 		super.readFromNBT(tagCompound)
 
 		_currentFE = tagCompound.getFloat(MFFSMachineTileEntity.NBT_TAG_FORCE_ENERGY_CURRENT)
+
+		val powerLinkStackTag = tagCompound.getCompoundTag(TAG_POWER_LINK_STACK)
+		if(powerLinkStackTag != null)
+			powerLinkStack = ItemStack.loadItemStackFromNBT(powerLinkStackTag)
 	}
 
 	override def writeToNBT(tagCompound: NBTTagCompound) {
 		super.writeToNBT(tagCompound)
 
 		tagCompound.setFloat(MFFSMachineTileEntity.NBT_TAG_FORCE_ENERGY_CURRENT, getCurrentForceEnergy)
+
+		if(powerLinkStack != null) {
+			val powerLinkStackTag = new NBTTagCompound
+			powerLinkStack.writeToNBT(powerLinkStackTag)
+
+			tagCompound.setTag(TAG_POWER_LINK_STACK, powerLinkStackTag)
+		}
 	}
 
 	def initialize() {
 		PowerMap.setCurrentPower(worldObj.provider.dimensionId, xCoord, yCoord, zCoord, _currentFE)
+
+		if(powerLinkStack != null && powerLinkStack.getItem == ItemMFFSCard && ItemMFFSCard.getCardType
+			(powerLinkStack) == CardType.PowerLink)
+			PowerMap.incNumLinks(PositionalCardData.getTileEntityAtLocation(powerLinkStack))
 
 		_initialized = true
 	}

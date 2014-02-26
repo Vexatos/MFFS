@@ -4,6 +4,7 @@ import scala.collection.mutable
 import com.minalien.mffs.network.{NetworkUtil, PacketBuilder}
 import net.minecraft.tileentity.TileEntity
 import com.minalien.mffs.ModularForcefieldSystem
+import net.minecraftforge.common.DimensionManager
 
 /**
  * Stores current power stored in objects within the world.
@@ -16,6 +17,10 @@ object PowerMap {
 	 * (DimensionID, X, Y, Z)
 	 */
 	private val dataMap = new mutable.HashMap[(Int, Int, Int, Int), TileData]()
+
+	def clearData() {
+		dataMap.clear()
+	}
 
 	def hasEntryAtPoint(dimensionId: Int, x: Int, y: Int, z: Int): Boolean = dataMap contains (dimensionId, x, y, z)
 
@@ -37,6 +42,16 @@ object PowerMap {
 
 	def incNumLinks(dimensionId: Int, x: Int, y: Int, z: Int) {
 		setNumLinks(dimensionId, x, y, z, getNumLinks(dimensionId, x, y, z) + 1)
+	}
+
+	def decNumLinks(tileEntity: TileEntity) {
+		if(tileEntity != null && tileEntity.getWorldObj.provider != null)
+			decNumLinks(tileEntity.getWorldObj.provider.dimensionId, tileEntity.xCoord, tileEntity.yCoord,
+				tileEntity.zCoord)
+	}
+
+	def decNumLinks(dimensionId: Int, x: Int, y: Int, z: Int) {
+		setNumLinks(dimensionId, x, y, z, Math.max(getNumLinks(dimensionId, x, y, z) - 1, 0))
 	}
 
 	def setNumLinks(dimensionId: Int, x: Int, y: Int, z: Int, numLinks: Int) {

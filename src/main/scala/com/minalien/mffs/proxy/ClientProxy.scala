@@ -12,6 +12,4 @@ class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileEntityFEExtractor], FEExtractorRenderer)
 		ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileEntityFECapacitor], FECapacitorRenderer)
 	}
-
-	override def isServer = false
 }

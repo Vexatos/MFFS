@@ -3,11 +3,13 @@ package com.minalien.mffs.tiles
 import net.minecraft.inventory.ISidedInventory
 import net.minecraft.item.{Item, ItemBlock, ItemStack}
 import net.minecraft.entity.player.EntityPlayer
-import com.minalien.mffs.items.ItemForcicium
+import com.minalien.mffs.items.{CardType, ItemMFFSCard, ItemForcicium}
 import net.minecraft.nbt.NBTTagCompound
 import com.minalien.mffs.blocks.BlockForciciumBlock
-import com.minalien.mffs.ModConfig
+import com.minalien.mffs.{ModularForcefieldSystem, ModConfig}
 import com.minalien.mffs.network.NetworkUtil
+import com.minalien.mffs.power.PowerMap
+import com.minalien.mffs.items.cards.PositionalCardData
 
 /**
  * Tile Entity responsible for the Force Energy Extractor.
@@ -75,7 +77,7 @@ class TileEntityFEExtractor extends MFFSMachineTileEntity with ISidedInventory {
 		super.writeToNBT(tagCompound)
 
 		if(forciciumStack != null) {
-			val forciciumStackTag = new NBTTagCompound()
+			val forciciumStackTag = new NBTTagCompound
 			forciciumStack.writeToNBT(forciciumStackTag)
 
 			tagCompound.setTag(TAG_FORCICIUM_STACK, forciciumStackTag)
@@ -87,30 +89,91 @@ class TileEntityFEExtractor extends MFFSMachineTileEntity with ISidedInventory {
 
 	def getSizeInventory: Int = 1
 
-	def getStackInSlot(slot: Int): ItemStack = forciciumStack
+	def getStackInSlot(slot: Int): ItemStack = {
+		slot match {
+			case 0 =>
+				forciciumStack
+
+			case 1 =>
+				powerLinkStack
+
+			case _ =>
+				null
+		}
+	}
 
 	def decrStackSize(slot: Int, numRetrieved: Int): ItemStack = {
-		if(forciciumStack != null) {
-			if(forciciumStack.stackSize <= numRetrieved) {
-				val retrievedStack = forciciumStack
-				forciciumStack = null
-				return retrievedStack
-			}
+		slot match {
+			case 0 =>
+				if(forciciumStack != null) {
+					if(forciciumStack.stackSize <= numRetrieved) {
+						val retrievedStack = forciciumStack
+						forciciumStack = null
+						return retrievedStack
+					}
 
-			val retrievedStack = forciciumStack.splitStack(numRetrieved)
-			if(forciciumStack.stackSize == 0)
-				forciciumStack = null
+					val retrievedStack = forciciumStack.splitStack(numRetrieved)
+					if(forciciumStack.stackSize == 0)
+						forciciumStack = null
 
-			return retrievedStack
+					return retrievedStack
+				}
+
+			case 1 =>
+				if(powerLinkStack != null) {
+					if(powerLinkStack.stackSize <= numRetrieved) {
+						val retrievedStack = powerLinkStack
+						if(!worldObj.isRemote)
+							PowerMap.decNumLinks(PositionalCardData.getTileEntityAtLocation(retrievedStack))
+						powerLinkStack = null
+						return retrievedStack
+					}
+
+					val retrievedStack = powerLinkStack.splitStack(numRetrieved)
+					if(powerLinkStack.stackSize == 0) {
+						if(!worldObj.isRemote)
+							PowerMap.decNumLinks(PositionalCardData.getTileEntityAtLocation(retrievedStack))
+						powerLinkStack = null
+					}
+
+					return retrievedStack
+				}
+
+			case _ =>
+				return null
 		}
 
 		null
 	}
 
-	def getStackInSlotOnClosing(slot: Int): ItemStack = forciciumStack
+	def getStackInSlotOnClosing(slot: Int): ItemStack = {
+		slot match {
+			case 0 =>
+				forciciumStack
 
-	def setInventorySlotContents(slot: Int, itemStack: ItemStack) = {
-		forciciumStack = itemStack
+			case 1 =>
+				powerLinkStack
+
+			case _ =>
+				null
+		}
+	}
+
+	def setInventorySlotContents(slot: Int, itemStack: ItemStack) {
+		slot match {
+			case 0 =>
+				forciciumStack = itemStack
+
+			case 1 =>
+				if(powerLinkStack == null && itemStack != null && isItemValidForSlot(slot,
+					itemStack) && !worldObj.isRemote)
+						PowerMap.incNumLinks(PositionalCardData.getTileEntityAtLocation(itemStack))
+
+				powerLinkStack = itemStack
+
+			case _ =>
+				return
+		}
 	}
 
 	def getInventoryName: String = "MFFS_FE_EXTRACTOR"
@@ -141,14 +204,18 @@ class TileEntityFEExtractor extends MFFSMachineTileEntity with ISidedInventory {
 			case 0 =>
 				itemStack.getItem match {
 					case ib: ItemBlock =>
-						return ib.field_150939_a == BlockForciciumBlock
+						ib.field_150939_a == BlockForciciumBlock
 
 					case i: Item =>
-						return i == ItemForcicium
+						i == ItemForcicium
 				}
-		}
 
-		false
+			case 1 =>
+				itemStack.getItem == ItemMFFSCard && ItemMFFSCard.getCardType(itemStack) == CardType.PowerLink
+
+			case _ =>
+				false
+		}
 	}
 
 	def getAccessibleSlotsFromSide(side: Int): Array[Int] = {

@@ -7,6 +7,7 @@ import net.minecraftforge.common.util.ForgeDirection
 import com.minalien.mffs.ModularForcefieldSystem
 import net.minecraft.item.ItemBlock
 import net.minecraft.init.Items
+import com.minalien.mffs.items.ItemMFFSCard
 
 /**
  * Force Energy Extractor
@@ -28,9 +29,19 @@ object BlockFEExtractor extends MFFSMachineBlock("feextractor") {
  		if(tileEntity == null || world.isRemote)
 			return false
 
-		if(player.getHeldItem != null && player.getHeldItem.getItem == Items.stick) {
-			rotateBlock(world, x, y, z, ForgeDirection.getOrientation(side))
-			return true
+		if(player.getHeldItem != null) {
+			player.getHeldItem.getItem match {
+				case Items.stick =>
+					rotateBlock(world, x, y, z, ForgeDirection.getOrientation(side))
+					return true
+
+				case ItemMFFSCard =>
+					if(tileEntity.isItemValidForSlot(1, player.getHeldItem)) {
+						tileEntity.setInventorySlotContents(1, player.getHeldItem)
+						player.destroyCurrentEquippedItem()
+						return true
+					}
+			}
 		}
 
 		player.openGui(ModularForcefieldSystem, 0, world, x, y, z)

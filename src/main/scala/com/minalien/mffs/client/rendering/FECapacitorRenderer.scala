@@ -6,6 +6,7 @@ import com.minalien.mffs.tiles.TileEntityFECapacitor
 import net.minecraftforge.common.util.ForgeDirection
 import com.minalien.mffs.blocks.MFFSMachineBlock
 import org.lwjgl.opengl.GL11
+import com.minalien.mffs.power.PowerMap
 
 /**
  * TESR responsible for rendering the Force Energy Capacitor.
@@ -88,6 +89,10 @@ object FECapacitorRenderer extends TileEntitySpecialRenderer {
 
 		fontRenderer.drawString(header, offsetX - (realSize / 2), offsetY - (realSize / 2) + (-2 *
 			lineHeight) - 1, 1)
+
+		val linkedDevices = PowerMap.getNumLinks(tileEntity)
+		fontRenderer.drawString(s"Linked: $linkedDevices", offsetX - (realSize / 2),
+			offsetY - (realSize / 2) - lineHeight, 1)
 
 		val forceEnergy = tile.getCurrentForceEnergy
 		val feCapacity = tile.getForceEnergyCapacity

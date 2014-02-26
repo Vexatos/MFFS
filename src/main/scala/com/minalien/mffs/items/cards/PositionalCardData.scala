@@ -2,6 +2,26 @@ package com.minalien.mffs.items.cards
 
 import net.minecraft.item.ItemStack
 import com.minalien.mffs.util.NBTTagCompoundHelper
+import net.minecraft.tileentity.TileEntity
+import com.minalien.mffs.items.{CardType, ItemMFFSCard}
+import net.minecraftforge.common.DimensionManager
+
+object PositionalCardData {
+	def getTileEntityAtLocation(itemStack: ItemStack): TileEntity = {
+		if(itemStack.getItem == ItemMFFSCard && ItemMFFSCard.getCardType(itemStack) == CardType.PowerLink) {
+			val cardData = new PositionalCardData(0, 0, 0, 0)
+			cardData.fromItemStack(itemStack)
+			val world = DimensionManager.getWorld(cardData.dimensionId)
+
+			if(world != null)
+				world.getTileEntity(cardData.xCoord, cardData.yCoord, cardData.zCoord)
+			else
+				null
+		}
+		else
+			null
+	}
+}
 
 /**
  * Utility class for cards containing positional data.

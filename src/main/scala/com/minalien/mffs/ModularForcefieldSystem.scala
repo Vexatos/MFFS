@@ -12,6 +12,10 @@ import com.minalien.mffs.proxy.CommonProxy
 import cpw.mods.fml.common.network.NetworkRegistry
 import net.minecraftforge.common.config.Configuration
 import com.minalien.mffs.network.{NetworkUtil, MFFSPacketHandler}
+import cpw.mods.fml.common.eventhandler.SubscribeEvent
+import net.minecraftforge.common.MinecraftForge
+import com.minalien.mffs.power.PowerMap
+import net.minecraftforge.event.world.WorldEvent
 
 /**
  * Core mod object for the Modular Forcefield System mod.
@@ -76,6 +80,13 @@ object ModularForcefieldSystem {
 
 		// Register the GUI Handler.
 		NetworkRegistry.INSTANCE.registerGuiHandler(ModularForcefieldSystem, MFFSGUIHandler)
+
+		MinecraftForge.EVENT_BUS.register(this)
+	}
+
+	@SubscribeEvent
+	def onWorldUnloaded(eventArgs: WorldEvent.Unload) {
+		PowerMap.clearData()
 	}
 
 	/**

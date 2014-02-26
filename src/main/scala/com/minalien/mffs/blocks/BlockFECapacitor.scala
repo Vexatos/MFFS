@@ -7,6 +7,7 @@ import net.minecraft.item.ItemBlock
 import net.minecraft.init.Items
 import net.minecraftforge.common.util.ForgeDirection
 import com.minalien.mffs.ModularForcefieldSystem
+import com.minalien.mffs.items.ItemMFFSCard
 
 /**
  * Force Energy Capacitor
@@ -28,9 +29,11 @@ object BlockFECapacitor extends MFFSMachineBlock("fecapacitor") {
 		if(tileEntity == null || world.isRemote)
 			return false
 
-		if(player.getHeldItem != null && player.getHeldItem.getItem == Items.stick) {
-			rotateBlock(world, x, y, z, ForgeDirection.getOrientation(side))
-			return true
+		if(player.getHeldItem != null) {
+			if(player.getHeldItem.getItem == Items.stick) {
+				rotateBlock(world, x, y, z, ForgeDirection.getOrientation(side))
+				return true
+			}
 		}
 
 		player.openGui(ModularForcefieldSystem, 0, world, x, y, z)

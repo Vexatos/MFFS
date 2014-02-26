@@ -1,5 +1,7 @@
 package com.minalien.mffs.proxy
 
+import net.minecraftforge.common.DimensionManager
+
 
 /**
  * Functionality common to both Server & Client.
@@ -7,5 +9,5 @@ package com.minalien.mffs.proxy
 class CommonProxy {
 	def registerRenderers() {}
 
-	def isServer = true
+	def isServer = DimensionManager.getWorld(0).isRemote
 }
