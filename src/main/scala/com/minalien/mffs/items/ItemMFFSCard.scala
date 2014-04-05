@@ -8,16 +8,11 @@ import com.minalien.mffs.ModularForcefieldSystem
 import com.minalien.mffs.items.CardType.CardType
 import net.minecraft.world.World
 import net.minecraft.entity.player.EntityPlayer
-import com.minalien.mffs.tiles.{TileEntityFECapacitor, MFFSMachineTileEntity}
-import com.minalien.mffs.items.cards.PositionalCardData
-import net.minecraftforge.common.DimensionManager
-import com.minalien.mffs.util.NBTTagCompoundHelper
-import com.minalien.mffs.power.PowerMap
 
 object CardType extends Enumeration {
 	type CardType = Value
 
-	val Blank, PowerLink, InfinitePower = Value
+	val Blank, InfinitePower = Value
 }
 
 /**
@@ -56,33 +51,6 @@ object ItemMFFSCard extends MFFSItem("mffscard") {
 		val cardType = getCardType(itemStack)
 
 		cardType match {
-			case CardType.Blank =>
-				val tileEntity = world.getTileEntity(x, y, z).asInstanceOf[MFFSMachineTileEntity]
-
-				if(tileEntity == null)
-					return false
-
-				if(tileEntity.isInstanceOf[TileEntityFECapacitor]) {
-					val cardData = new PositionalCardData(world.provider.dimensionId, x, y, z)
-
-					if(itemStack.stackSize == 1 && !player.capabilities.isCreativeMode) {
-						itemStack.setItemDamage(CardType.PowerLink.id)
-						cardData.saveToItemStack(itemStack)
-					}
-					else {
-						val cardStack = new ItemStack(ItemMFFSCard, 1, CardType.PowerLink.id)
-						cardData.saveToItemStack(cardStack)
-
-						if(!player.capabilities.isCreativeMode)
-							itemStack.stackSize -= 1
-
-						if(!player.inventory.addItemStackToInventory(cardStack))
-							player.dropPlayerItemWithRandomChoice(cardStack, false)
-					}
-				}
-
-				!world.isRemote
-
 			case _ =>
 				false
 		}
@@ -97,7 +65,7 @@ object ItemMFFSCard extends MFFSItem("mffscard") {
 
 		cardType match {
 			// Cards with positional data.
-			case CardType.PowerLink =>
+			/*case CardType.PowerLink =>
 				val cardData = PositionalCardData.fromItemStack(itemStack)
 
 				val isInDimension: Boolean = player.worldObj.provider.dimensionId == cardData.dimensionId
@@ -108,10 +76,7 @@ object ItemMFFSCard extends MFFSItem("mffscard") {
 
 				infoListAsString.add(s"Dim: §${if(isInDimension) "a" else "c" }$dimName§r")
 
-				infoListAsString.add(s"§${if(PowerMap.isTileValid(cardData.dimensionId, cardData.xCoord,
-					cardData.yCoord, cardData.zCoord)) "aValid" else "cInvalid" }")
-
-				return
+				return*/
 
 			// Default
 			case _ => return

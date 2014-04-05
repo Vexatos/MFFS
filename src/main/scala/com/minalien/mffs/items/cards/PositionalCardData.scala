@@ -13,7 +13,7 @@ object PositionalCardData {
 	val TAG_Z_COORD = "POSITIONAL_CARD_Z_COORD"
 
 	def getTileEntityAtLocation(itemStack: ItemStack): TileEntity = {
-		if(itemStack.getItem == ItemMFFSCard && ItemMFFSCard.getCardType(itemStack) == CardType.PowerLink) {
+		if(itemStack.getItem == ItemMFFSCard) {
 			val cardData = PositionalCardData.fromItemStack(itemStack)
 			val world = DimensionManager.getWorld(cardData.dimensionId)
 

@@ -12,10 +12,7 @@ import com.minalien.mffs.proxy.CommonProxy
 import cpw.mods.fml.common.network.NetworkRegistry
 import net.minecraftforge.common.config.Configuration
 import com.minalien.mffs.network.{NetworkUtil, MFFSPacketHandler}
-import cpw.mods.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.common.MinecraftForge
-import com.minalien.mffs.power.PowerMap
-import net.minecraftforge.event.world.WorldEvent
 
 /**
  * Core mod object for the Modular Forcefield System mod.
@@ -84,11 +81,6 @@ object ModularForcefieldSystem {
 		MinecraftForge.EVENT_BUS.register(this)
 	}
 
-	@SubscribeEvent
-	def onWorldUnloaded(eventArgs: WorldEvent.Unload) {
-		PowerMap.clearData()
-	}
-
 	/**
 	 * Registers all blocks and their associated tile entities.
 	 */
@@ -103,10 +95,6 @@ object ModularForcefieldSystem {
 		// Register standard blocks.
 		GameRegistry.registerBlock(BlockMonazitOre, BlockMonazitOre.getUnlocalizedName)
 		GameRegistry.registerBlock(BlockForciciumBlock, BlockForciciumBlock.getUnlocalizedName)
-
-		// Register machine blocks.
-		registerMachineBlock(BlockFEExtractor)
-		registerMachineBlock(BlockFECapacitor)
 	}
 
 	/**
