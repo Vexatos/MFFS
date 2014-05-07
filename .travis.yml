@@ -1,0 +1,6 @@
+language: scala
+jdk: oraclejdk7
+
+install:
+  - gradle setupDevWorkspace
+  - gradle build
