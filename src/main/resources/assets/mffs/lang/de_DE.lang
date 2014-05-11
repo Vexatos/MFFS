@@ -1,0 +1,9 @@
+itemGroup.tabMFFS=Modular Forcefield System
+
+tile.monazitOre.name=Monaziterz
+tile.forciciumBlock.name=Viriumblock
+tile.feextractor.name=Virium-Energieextraktor
+tile.fecapacitor.name=Virium-Energiekondensator
+
+item.forcicium.name=Virium
+item.mffscard.name=MFFS-Karte
